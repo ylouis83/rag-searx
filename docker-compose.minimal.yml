@@ -1,0 +1,177 @@
+version: '3.8'
+
+services:
+  # ======================================================================
+  # RAG-SearX API服务 - 内存优化版
+  # ======================================================================
+  rag-searx-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rag-searx-api
+    ports:
+      - "${API_PORT:-8000}:8000"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./config:/app/config
+    environment:
+      - VECTOR_DB_HOST=milvus-standalone
+      - DATABASE_URL=sqlite:///./data/rag_searx.db
+    env_file:
+      - .env
+    depends_on:
+      - milvus-standalone
+      - etcd
+      - minio
+    restart: unless-stopped
+    networks:
+      - rag-searx-network
+    # 内存限制
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 10s
+      retries: 2
+    profiles:
+      - api  # 将API服务设为可选
+
+  # ======================================================================
+  # Milvus向量数据库 - 轻量级配置 (使用官方镜像)
+  # ======================================================================
+  milvus-standalone:
+    container_name: milvus-standalone
+    image: milvusdb/milvus:v2.3.4
+    command: ["milvus", "run", "standalone"]
+    security_opt:
+    - seccomp:unconfined
+    environment:
+      ETCD_ENDPOINTS: etcd:2379
+      MINIO_ADDRESS: minio:9000
+      # Milvus内存优化参数
+      MILVUS_CACHE_SIZE: 0.2  # 降低缓存大小到200MB
+      MILVUS_INSERT_BUFFER_SIZE: 64   # 降低插入缓冲区
+      MILVUS_CPU_CACHE_SIZE: 2        # 降低CPU缓存
+    volumes:
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/milvus:/var/lib/milvus
+      - ./config/milvus_minimal.yaml:/milvus/configs/milvus.yaml  # 自定义配置
+    # 严格的内存限制
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9091/healthz"]
+      interval: 60s
+      start_period: 120s
+      timeout: 30s
+      retries: 2
+    ports:
+      - "19530:19530"
+      - "9091:9091"
+    depends_on:
+      - "etcd"
+      - "minio"
+    networks:
+      - rag-searx-network
+
+  # ======================================================================
+  # Etcd - 内存优化配置 (使用官方镜像)
+  # ======================================================================
+  etcd:
+    container_name: milvus-etcd
+    image: quay.io/coreos/etcd:v3.5.5
+    environment:
+      - ETCD_AUTO_COMPACTION_MODE=revision
+      - ETCD_AUTO_COMPACTION_RETENTION=500    # 减少保留数据
+      - ETCD_QUOTA_BACKEND_BYTES=134217728   # 128MB配额 (原来4GB)
+      - ETCD_MAX_REQUEST_BYTES=1572864       # 1.5MB请求限制
+      - ETCD_GRPC_KEEPALIVE_MIN_TIME=5s      # 优化keepalive
+      - ETCD_GRPC_KEEPALIVE_INTERVAL=2s
+      - ETCD_GRPC_KEEPALIVE_TIMEOUT=5s
+    volumes:
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/etcd:/etcd
+    command: etcd -advertise-client-urls=http://127.0.0.1:2379 -listen-client-urls http://0.0.0.0:2379 --data-dir /etcd
+    # 内存限制
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+        reservations:
+          memory: 128M
+          cpus: '0.25'
+    healthcheck:
+      test: ["CMD", "etcdctl", "endpoint", "health"]
+      interval: 60s
+      timeout: 30s
+      retries: 2
+    networks:
+      - rag-searx-network
+
+  # ======================================================================
+  # MinIO - 轻量级对象存储 (使用官方镜像)
+  # ======================================================================
+  minio:
+    container_name: milvus-minio
+    image: minio/minio:RELEASE.2023-03-20T20-16-18Z
+    environment:
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      # MinIO内存优化
+      MINIO_CACHE_DRIVES: ""              # 禁用缓存驱动
+      MINIO_CACHE_EXCLUDE: ""             # 禁用缓存排除
+      MINIO_CACHE_EXPIRY: 1               # 最小缓存过期时间
+      MINIO_CACHE_MAXUSE: 10              # 最大缓存使用10%
+    ports:
+      - "9001:9001"
+      - "9000:9000"
+    volumes:
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/minio:/minio_data
+    command: minio server /minio_data --console-address ":9001"
+    # 内存限制
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 60s
+      timeout: 30s
+      retries: 2
+    networks:
+      - rag-searx-network
+
+# ======================================================================
+# 网络配置
+# ======================================================================
+networks:
+  rag-searx-network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1450  # 降低MTU减少内存使用
+
+# ======================================================================
+# 数据卷配置
+# ======================================================================
+volumes:
+  milvus_data:
+    driver: local
+  etcd_data:
+    driver: local
+  minio_data:
+    driver: local 

@@ -1,0 +1,90 @@
+# Milvus 内存优化配置文件
+# 适用于内存有限的环境(约2.5GB总内存使用)
+
+etcd:
+  endpoints:
+    - etcd:2379
+
+minio:
+  address: minio
+  port: 9000
+  accessKeyID: minioadmin
+  secretAccessKey: minioadmin
+  useSSL: false
+  bucketName: a-bucket
+
+# 查询节点内存优化
+queryNode:
+  cacheSize: 256MB  # 减少缓存大小
+  
+# 索引节点内存优化  
+indexNode:
+  scheduler:
+    buildParallel: 1  # 减少并行构建数
+
+# 数据节点内存优化
+dataNode:
+  dataSync:
+    flowGraph:
+      maxQueueLength: 16  # 减少队列长度
+      maxParallelism: 1   # 减少并行度
+  segment:
+    maxSize: 128        # 减少段大小(MB)
+    sealProportion: 0.25  # 减少封装比例
+
+# 代理内存优化
+proxy:
+  maxNameLength: 255
+  maxFieldNum: 64
+  maxDimension: 32768
+  ginLogging: false  # 关闭详细日志
+
+# 根协调器优化
+rootCoord:
+  maxPartitionNum: 1024
+  minSegmentSizeToEnableIndex: 256  # 减少索引启用的最小段大小
+
+# 查询协调器优化
+queryCoord:
+  autoHandoff: true
+  autoBalance: true
+  overloadedMemoryThresholdPercentage: 90  # 提高内存阈值
+  balanceIntervalSeconds: 60
+  memoryUsageMaxDifferencePercentage: 30
+
+# 数据协调器优化
+dataCoord:
+  enableCompaction: true
+  enableGarbageCollection: true
+  segment:
+    maxSize: 128
+    sealProportion: 0.25
+    assignmentExpiration: 2000
+  compaction:
+    enableAutoCompaction: true
+
+# 通用配置
+common:
+  defaultPartitionName: "_default"
+  defaultIndexName: "_default_idx"
+  retentionDuration: 432000    # 5天数据保留
+  entityExpiration: 432000     # 5天实体过期
+  gracefulTime: 1000          # 减少优雅关闭时间
+  gracefulStopTimeout: 30     # 减少停止超时
+
+# 存储配置
+storage:
+  path:
+    local: /var/lib/milvus/data/
+  
+# 日志配置 - 减少日志输出
+log:
+  level: warn          # 只记录警告和错误
+  file:
+    maxSize: 100       # 减少日志文件大小(MB)
+    maxAge: 7          # 减少日志保留天数
+    maxBackups: 5      # 减少备份数量
+
+# 指标配置 - 关闭详细指标
+metrics:
+  enableProfiling: false 

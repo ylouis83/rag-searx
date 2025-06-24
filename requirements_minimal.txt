@@ -1,0 +1,32 @@
+# 核心Web框架
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+
+# 核心依赖
+python-dotenv==1.0.0
+pydantic==2.5.2
+pydantic-settings==2.1.0
+httpx==0.25.2
+loguru==0.7.2
+
+# 向量数据库
+pymilvus==2.3.4
+
+# 阿里云百炼
+dashscope==1.14.1
+
+# 文本处理
+jieba==0.42.1
+
+# 数据处理
+pandas==2.1.4
+numpy==1.24.4
+
+# 文档处理
+pypdf==3.17.4
+python-docx==1.1.0
+markdown==3.5.1
+
+# 图像处理
+pillow==10.1.0 

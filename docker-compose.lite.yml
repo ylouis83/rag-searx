@@ -1,0 +1,198 @@
+version: '3.8'
+
+services:
+  # ======================================================================
+  # RAG-SearX API服务 - 超轻量级模式
+  # ======================================================================
+  rag-searx-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rag-searx-api
+    ports:
+      - "${API_PORT:-8000}:8000"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./config:/app/config
+    environment:
+      - VECTOR_DB_TYPE=memory  # 使用内存向量存储
+      - DATABASE_URL=sqlite:///./data/rag_searx.db
+      - MEMORY_STORAGE=true
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+      - rag-searx-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    # 极限内存限制
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+
+  # ======================================================================
+  # ChromaDB - 轻量级向量数据库 (Profile: chromadb)
+  # ======================================================================
+  chromadb:
+    container_name: rag-searx-chromadb
+    image: chromadb/chroma:latest
+    ports:
+      - "8001:8000"
+    volumes:
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/chromadb:/chroma/chroma
+    environment:
+      - CHROMA_SERVER_HOST=0.0.0.0
+      - CHROMA_SERVER_HTTP_PORT=8000
+      - PERSIST_DIRECTORY=/chroma/chroma
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - rag-searx-network
+    # 内存限制
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+    profiles:
+      - chromadb
+
+  # ======================================================================
+  # ChromaDB API服务配置
+  # ======================================================================
+  rag-searx-api-chromadb:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rag-searx-api-chromadb
+    ports:
+      - "${API_PORT:-8000}:8000"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./config:/app/config
+    environment:
+      - VECTOR_DB_TYPE=chromadb
+      - CHROMADB_HOST=chromadb
+      - CHROMADB_PORT=8000
+      - DATABASE_URL=sqlite:///./data/rag_searx.db
+    env_file:
+      - .env
+    depends_on:
+      - chromadb
+    restart: unless-stopped
+    networks:
+      - rag-searx-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    # 内存限制
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+    profiles:
+      - chromadb
+
+  # ======================================================================
+  # Qdrant - 另一个轻量级向量数据库选项
+  # ======================================================================
+  qdrant:
+    container_name: rag-searx-qdrant
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/qdrant:/qdrant/storage
+    environment:
+      - QDRANT__SERVICE__HTTP_PORT=6333
+      - QDRANT__SERVICE__GRPC_PORT=6334
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - rag-searx-network
+    # 内存限制
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+    profiles:
+      - qdrant
+
+  # ======================================================================
+  # Qdrant API服务配置
+  # ======================================================================
+  rag-searx-api-qdrant:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rag-searx-api-qdrant
+    ports:
+      - "${API_PORT:-8000}:8000"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./config:/app/config
+    environment:
+      - VECTOR_DB_TYPE=qdrant
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
+      - DATABASE_URL=sqlite:///./data/rag_searx.db
+    env_file:
+      - .env
+    depends_on:
+      - qdrant
+    restart: unless-stopped
+    networks:
+      - rag-searx-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    # 内存限制
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+    profiles:
+      - qdrant
+
+# ======================================================================
+# 网络配置
+# ======================================================================
+networks:
+  rag-searx-network:
+    driver: bridge
+
+# ======================================================================
+# 卷配置
+# ======================================================================
+volumes:
+  chromadb_data:
+    driver: local
+  qdrant_data:
+    driver: local 

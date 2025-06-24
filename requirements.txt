@@ -1,0 +1,29 @@
+# Core AI and ML
+dashscope==1.14.1
+sentence-transformers==2.2.2
+transformers==4.36.2
+torch==2.1.2
+
+# Vector Database
+pymilvus==2.3.4
+
+# Text Processing
+jieba==0.42.1
+rank-bm25==0.2.2
+numpy==1.24.4
+
+# Web Framework (Optional)
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+
+# Document Processing
+pypdf==3.17.4
+python-docx==1.1.0
+
+# Utilities
+tqdm==4.66.1
+python-dotenv==1.0.0
+pydantic==2.5.2
+
+# HTTP Client
+httpx==0.25.2
