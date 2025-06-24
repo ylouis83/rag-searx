@@ -18,7 +18,7 @@ from ragflow_integration.video_rag_pipeline import VideoRAGPipeline
 
 
 def print_banner():
-    """打印系统横幅"""
+    """打印系统横幅123"""
     banner = """
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║                          🎬 视频RAG演示系统 🚀                              ║
