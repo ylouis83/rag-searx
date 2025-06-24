@@ -60,7 +60,7 @@ services:
       MILVUS_CPU_CACHE_SIZE: 2        # 降低CPU缓存
     volumes:
       - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/milvus:/var/lib/milvus
-      - ./config/milvus_minimal.yaml:/milvus/configs/milvus.yaml  # 自定义配置
+      # - ./config/milvus_minimal.yaml:/milvus/configs/milvus.yaml  # 自定义配置（可选）
     # 严格的内存限制
     deploy:
       resources:

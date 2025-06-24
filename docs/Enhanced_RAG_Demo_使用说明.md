@@ -1,439 +1,119 @@
-#  RAG
+(venv) louisliu@louisliudeMacBook-Air scripts % ./run_video_rag.sh qa
+🎬 启动RAGFlow视频召回与生成系统
 
-##  
+📦 激活Python虚拟环境...
+✅ 虚拟环境已激活
 
-**macOS iTerm2**RAGMilvusQwen3
-
-##  
-
-###  
-- **** - ANSIiTerm2
-- **** - 
-- **** - 
-- **** - ℹ
-
-###  
-
-#### 1. 
-- Milvus
-- 
-- 
-- 
-
-#### 2. 
-- 
-- 
-- 
-- 
-
-#### 3. 
-- 
-- 
-- 
-- 
-
-#### 4. 
-- ****ID
-- ****
-- ****
-- ****
-
-#### 5. LLM
-- 
-- 
-- 
-- 
-
-#### 6. 
-- ****
-- **AI**
-- ****
-- ****
-
-##  
-
-### 
-```bash
-# 
-python enhanced_rag_demo.py
-
-# ""
-```
-
-### 
-```bash
-# 
-python enhanced_rag_demo.py ""
-python enhanced_rag_demo.py ""
-python enhanced_rag_demo.py ""
-```
-
-### 
-```bash
-# 
-chmod +x enhanced_rag_demo.py
-./enhanced_rag_demo.py ""
-```
-
-##  
-
-### 
-
-```
-
-                         RAG                            
-  : Milvus + Qwen3                                   
-  : RAG (→→)                                    
-  : macOS iTerm2                                                    
+🎯 视频RAG系统功能菜单:
+   1. 完整演示 (Schema + 存储 + 搜索 + 问答 + 提示工程)
+   2. 仅元数据Schema演示
+   3. 仅智能问答演示
+   4. 仅提示工程演示
+   5. 交互式问答模式
 
 
- Milvus...
- Milvus
-ℹ  : localhost:19530
- : pdf_rag_test
-ℹ    10 
+🔥 启动模式: qa
+⚡ 技术栈: RAGFlow + BGE + Milvus + Qwen + 提示工程
 
- :
-ℹ  : embedding
-ℹ  : IVF_FLAT
-ℹ  : IP
-ℹ  : 6
+/Users/louisliu/.cursor/rag-searx/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
 
- RAG
-================================================================================
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    🎬 RAGFlow视频召回与生成演示系统 🎬                        ║
+║                                                                              ║
+║  🔥 核心功能:                                                                ║
+║     • YouTube视频元数据结构化存储                                            ║
+║     • 基于BGE模型的语义向量化                                                ║
+║     • Milvus向量数据库高效检索                                               ║
+║     • Qwen大模型智能生成 + 视频推荐                                          ║
+║                                                                              ║
+║  🚀 技术栈: RAGFlow + BGE + Milvus + Qwen + 提示工程                        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
 
- : 
-  Milvus...
-  ...
- 
-  5 
-
- :
-
-  1
-   ID: xxx...
-   : ragtest.pdf
-   : X
-   : X
-   : X.XXXX
-   : ...
-
-  Qwen3...
- Qwen3
+⚠️  跳过存储演示，使用现有数据...
+🚀 初始化视频RAG流水线...
+🧮 初始化BGE嵌入模型...
+🚀 初始化BGE嵌入模型
+   模型: BAAI/bge-large-zh-v1.5
+   设备: mps
+   维度: 1024
+   最大长度: 512
+✅ BGE嵌入模型初始化完成
+🔗 连接Milvus数据库...
+✅ Milvus连接成功
+📋 集合 video_rag_collection 已存在
+✅ 集合已在内存中
 
 ================================================================================
- RAG - 
+🤖 视频智能问答演示
 ================================================================================
+🎯 欢迎使用视频智能问答系统!
+💡 提示: 输入 'quit' 退出，输入 'help' 查看帮助
+📝 您可以询问关于糖尿病的任何问题
 
- : 
+❓ 请输入您的问题 (第1个): 2型糖尿病怎么治？？
 
- AI:
+🔍 正在分析您的第1个问题...
+============================================================
 
-[AI]
-
-
- :
-  ⏱  : XX.XX
-   : X
-   : X.XXXX
-   : X.XXXX
-   : XXX
-
- :
-  1. ragtest.pdf (X) - : X.XXXX
-  2. ragtest.pdf (X) - : X.XXXX
-  3. ragtest.pdf (X) - : X.XXXX
+🚀 开始视频RAG查询流程
+❓ 用户问题: 2型糖尿病怎么治？？
+================================================================================
+🔍 搜索查询: 2型糖尿病怎么治？？
+📦 正在加载BGE模型...
+✅ BGE模型加载完成，耗时: 11.21秒
+   实际维度: 1024
+🧮 查询向量化完成，耗时: 12.705秒
+🔍 向量搜索完成，耗时: 0.219秒
+✅ 找到 3 个相关结果
+   最高相似度: 0.7270
+   平均相似度: 0.6542
+🤖 开始生成视频推荐回答...
+📝 提示词长度: 1180 字符
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+✅ 回答生成完成，耗时: 9.81秒
 
 ================================================================================
-  RAG
-```
+🎯 视频RAG查询完成
+================================================================================
+💬 问题: 2型糖尿病怎么治？？
+📖 回答: 治疗2型糖尿病主要依赖于生活方式的调整和必要的药物帮助。首先，保持健康的饮食习惯非常重要，通过合理安排饮食可以有效控制血糖水平。其次，定期进行体育锻炼也很关键，运动可以帮助减轻体重，同时提高身体对胰岛素的敏感性，从而更好地管理血糖。
 
-##  
+如果仅靠饮食和运动还不足以控制血糖，医生可能会建议使用一些口服药物或者胰岛素注射来辅助治疗。这些方法都是为了让你的血糖保持在一个健康范围内。
 
-### 
-- **Milvus** - 
-- **DashScope** - LLM
-- **Python** - 
-- **ANSI** - 
+如果您想更直观地了解这个过程，可以观看下面这个非常棒的科普视频：[了解 2 型糖尿病 (Understanding Type 2 Diabetes Mellitus)](https://www.youtube.com/watch?v=au-w0QXB6jg)。
 
-### 
-- **** - IPTop-K
-- **** - 
-- **** - 
-- **** - 
+请注意，本回答仅供参考，不能替代专业医疗建议。如有健康问题，请及时咨询医生。
 
-##  
+📊 统计信息:
+   ⏱️  总耗时: 22.75秒
+   🎬 检索视频: 1个
+   🧩 检索片段: 3个
+   📈 平均相似度: 0.6542
+   🚀 最高相似度: 0.7270
 
-### Python
-```txt
-pymilvus>=2.3.4
-dashscope>=1.14.1
-numpy>=1.24.4
-```
+💡 AI智能回答:
+----------------------------------------
+治疗2型糖尿病主要依赖于生活方式的调整和必要的药物帮助。首先，保持健康的饮食习惯非常重要，通过合理安排饮食可以有效控制血糖水平。其次，定期进行体育锻炼也很关键，运动可以帮助减轻体重，同时提高身体对胰岛素的敏感性，从而更好地管理血糖。
 
-### 
-- ****: macOS (iTerm2)
-- **Python**: 3.9+
-- **Milvus**: 2.3+ (localhost:19530)
-- ****: DashScope API
+如果仅靠饮食和运动还不足以控制血糖，医生可能会建议使用一些口服药物或者胰岛素注射来辅助治疗。这些方法都是为了让你的血糖保持在一个健康范围内。
 
-##  
+如果您想更直观地了解这个过程，可以观看下面这个非常棒的科普视频：[了解 2 型糖尿病 (Understanding Type 2 Diabetes Mellitus)](https://www.youtube.com/watch?v=au-w0QXB6jg)。
 
-### ragtest.pdf
-- ****: 10
-- ****: 1536
-- ****: ~0.4/
-- ****: ~0.03/
-- **LLM**: ~45/
-- ****: 18-35
+请注意，本回答仅供参考，不能替代专业医疗建议。如有健康问题，请及时咨询医生。
+----------------------------------------
 
-### 
-- ****: 3000-6000
-- ****: 1800-5400
-- ****: Top-5100%
+📊 查询统计:
+   ⏱️  总耗时: 22.75秒
+   🎬 检索视频: 1个
+   🧩 检索片段: 3个
+   📈 最高相似度: 0.7270
 
-##  
-
-### 
-```bash
-# 
-Ctrl + C  # 
-
-# 
-python enhanced_rag_demo.py -h
-
-# 
-for query in "AI" "" ""; do
-    python enhanced_rag_demo.py "$query"
-done
-```
-
-### 
-- **** - 
-- **API** - 
-- **** - 
-- **** - Ctrl+C
-
-##  
-
-### 
-1. **** - 
-2. **** - top_ktemperature
-3. **** - JSON/Markdown
-4. **** - 
-
-### 
-1. **** - 
-2. **** - 
-3. **** - LLM
-4. **** - 
-
-##  
-
-RAGRAG
-
-
-- **RAG** - 
-- **** - 
-- **** - 
-- **** - 
-
-macOS iTerm2RAG
-
-# Enhanced RAG Demo 
-
-## 
-
-MilvusDashScope APIRAG (Retrieval-Augmented Generation) 
-
-## 
-
-1. **enhanced_rag_demo.py** - (ANSI)
-2. **enhanced_rag_demo_markdown.py** - Markdown   ****
-3. **enhanced_app.py** - FastAPI Web
-4. **quick_demo.sh** - 
-5. **run_demo.sh** - 
-6. **run_markdown_demo.sh** - Markdown   ****
-
-## 
-
-### 1: Markdown ()
-
-```bash
-# 
-./run_markdown_demo.sh
-
-# 
-./run_markdown_demo.sh ""
-```
-
-### 2:  ()
-
-```bash
-# 
-./run_demo.sh
-
-# 
-./run_demo.sh ""
-```
-
-### 3: 
-
-```bash
-./quick_demo.sh
-```
-
-### 4: Web
-
-```bash
-# Web
-python enhanced_app.py
-
-#  http://localhost:8000
-```
-
-## 
-
-###  (enhanced_rag_demo.py)
-- ****: ANSI
-- ****: 
-- ****: 
-
-### Markdown (enhanced_rag_demo_markdown.py)   ****
-- ****: Markdown
-- ****: 
-- ****: Markdown
-- ****: 
-- ****: 
-
-## 
-
-###  
-1. ****: DashScope text-embedding-v1
-2. ****: MilvusTop-K
-3. ****: 
-4. ****: 
-
-###  
-1. ****: 
-2. ****: LLM
-3. **Qwen3**: qwen-plus
-4. ****: 
-
-###  
-- 
-- 
-- 
-- 
-- 
-- 
-
-## 
-
- `ragtest.pdf`AI
-- ****: 200KB
-- ****: 3
-- ****: 10
-- ****: 
-
-## 
-
-
-1. `""`
-2. `""`
-3. `"AlexNet"`
-
-##  (Markdown)
-
-```markdown
-#  RAG (Markdown)
-
-##  
- **Milvus**
-- : `localhost:19530`
-
-###  
-
-#### 
-|  |  |
-|------|------|
-|  | 5 |
-|  | 3368.1116 |
-|  | 1839.4399 |
-
-###  
-```
-[1 - : ragtest.pdf 1]
-......
-```
-
-## 
-
-### 
-- ****: 1536
-- ****: ~0.4/
-- ****: ~0.02/
-- ****: Top-5100%
-
-### 
-- **LLM**: 40-50/
-- ****: 18-25
-- ****: 
-
-## 
-
-### 
-- Python 3.9+
-- Milvus 2.3.4+
-- DashScope API
-
-### 
-```bash
-pip install pymilvus==2.3.4
-pip install dashscope==1.14.1
-pip install fastapi==0.104.1
-pip install uvicorn
-```
-
-## API
-
-```python
-# DashScope API
-DASHSCOPE_API_KEY = "sk-b70842d25c884aa9aa18955b00c24d37"
-
-# 
-EMBEDDING_MODEL = "text-embedding-v1"
-LLM_MODEL = "qwen-plus"
-```
-
-## 
-
-### 
-1. **ModuleNotFoundError**: 
-2. **Milvus**: Milvus
-3. **API**: DashScope API
-
-### 
-```bash
-# rag-searx
-source venv/bin/activate
-```
-
-## 
-
-### v2.0.0 ()  
-- ****: Markdown
-- ****: 
-- ****: 
-- ****: 
-
-### v1.0.0
-- RAG
-- ANSI
-
----
-
-## 
-
-**AI-Coding R&D Team**  
-RAG 
+📊 问答统计: 已回答 1 个问题
