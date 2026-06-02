@@ -54,7 +54,7 @@ class RAGFlowPipeline:
         print(" BGE")
         
         # LLM
-        self.llm_api_key = "sk-b70842d25c884aa9aa18955b00c24d37"
+        self.llm_api_key = os.environ.get("DASHSCOPE_API_KEY", "")
         os.environ["DASHSCOPE_API_KEY"] = self.llm_api_key
         dashscope.api_key = self.llm_api_key
         

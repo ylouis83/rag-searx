@@ -22,8 +22,8 @@ from ragflow_integration.video_metadata_schema import VideoMetadata, SemanticChu
 from ragflow_integration.bge_embedding import get_bge_model
 
 # API
-os.environ['DASHSCOPE_API_KEY'] = 'sk-b70842d25c884aa9aa18955b00c24d37'
-dashscope.api_key = 'sk-b70842d25c884aa9aa18955b00c24d37'
+os.environ['DASHSCOPE_API_KEY'] = os.environ.get("DASHSCOPE_API_KEY", "")
+dashscope.api_key = os.environ.get("DASHSCOPE_API_KEY", "")
 
 
 class VideoRAGPipeline:

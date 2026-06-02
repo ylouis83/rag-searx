@@ -21,8 +21,8 @@ from ragflow_integration.bge_embedding import BGEEmbeddingModel
 from ragflow_integration.multi_path_recall import MultiPathRecallSystem, MultiRecallConfig, RecallResult, RecallPath
 
 # 设置通义千问API
-os.environ['DASHSCOPE_API_KEY'] = 'sk-b70842d25c884aa9aa18955b00c24d37'
-dashscope.api_key = 'sk-b70842d25c884aa9aa18955b00c24d37'
+os.environ['DASHSCOPE_API_KEY'] = os.environ.get("DASHSCOPE_API_KEY", "")
+dashscope.api_key = os.environ.get("DASHSCOPE_API_KEY", "")
 
 
 class EnhancedVideoRAGPipeline:
